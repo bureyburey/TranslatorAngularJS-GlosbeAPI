@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Translator using Glosbe API</title>
+        <!--
+        By: Burey
+        Date: 15 April 2017
+        Desc: Translating with Glosbe API
+        Usage: Translating words from
+        source language to another  
+        language using the Glosbe API
+        and ajax requests
+        
+        -->
+        
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="   crossorigin="anonymous"></script>
+        
+        <script src="index.js"></script>
+        <link href="style.css">
+    </head>
+    <body ng-app="translator" ng-controller="TransCtrl">
+        
+        
+        <h3>Translation using Glosbe API</h3>
+        <a href="https://glosbe.com/a-api">Glosbe API Website</a>
+        
+        <marquee style="background-color:grey;color:white;border-radius:10%;">Translator using Glosbe API | Leave a comment if you wish me to add additional languages | You can also manually select languages: click From/To, choose "Manual Select" and type in the language code | <a href="https://en.m.wikipedia.org/wiki/List_of_ISO_639-3_codes">Languages Codes list</a></marquee>
+        
+    <!-- TRANSLATION INPUT DIV+FORM -->
+        <div class="form-group">
+        <form ng-submit="translate()">
+        <label class="label label-default">From: </label>
+        <select class="form-control" ng-model="langSrc" ng-options="(langSrc.disp+' ('+langSrc.val+')') for langSrc in lang" ng-init="langSrc=lang[0]"></select>
+        <input class="form-control" ng-model="manualSrc" ng-show="langSrc.val==='manual'" placeholder="Language code (example - eng):" onkeyup="this.value=this.value.toLowerCase()" />
+        <label class="label label-default">To: </label>
+        <select class="form-control" ng-model="langDest" ng-options="(langDest.disp+' ('+langDest.val+')') for langDest in lang" ng-init="langDest=lang[0]"></select>
+        
+        <input class="form-control" ng-model="manualDest" ng-show="langDest.val==='manual'" placeholder="Language code (example - eng):" onkeyup="this.value=this.value.toLowerCase()" />
+    <br />
+        <input class="form-control" ng-model="text" onkeyup="this.value=this.value.toLowerCase()" placeholder="Word to Translate:" required />
+    <br />
+        <button style="width:100%;" ng-class="'btn-'+status" ng-type="submit">Translate</button>
+        </form>
+        </div>
+        
+        
+        <!-- TRANSLATION RESULTS DIV -->
+        <div id="results">
+            <div id="loader" ng-hide="translation.length!==0"></div>
+            <label class="label label-danger" ng-show="translation.tuc===undefined && translation!==null && translation.length!==0">No Translations Found!!!</label>
+            <label class="label label-danger" ng-show="translation.statusText==='error'">Error Occured!!</label>
+            <span class="container" ng-repeat="res in translation.tuc">
+            <label class="label label-info">Translation: </label><label class="label label-primary">{{res.phrase.text | removeHTMLTags}}</label>
+            <br />
+            <label class="label label-info">Meaning: </label>
+            <span ng-repeat="meaning in res.meanings" style="white-space:normal;">
+            <label style="margin-right:5px;display:inline-block;white-space:normal;" class="label label-primary">{{meaning.text | removeHTMLTags}}</label>
+            </span>
+            <hr>
+            </span>
+        </div>
+    </body>
+</html>
